@@ -3,8 +3,9 @@ import VueRouter from "vue-router";
 import Home from "../views/homepage.vue";
 import Register from "../views/register.vue";
 import Forgotpass from "../views/forgotpassword.vue";
-// import Passreset from "../views/passreset.vue";
-
+import Passreset from "../views/passreset.vue";
+import Personal from "../views/personal.vue";
+import Editprofile from "../views/editprofile.vue";
 Vue.use(VueRouter);
 const router = new VueRouter({
   mode: "history",
@@ -15,7 +16,9 @@ const router = new VueRouter({
     { path: "/homepage", component: Home },
     { path: "/register", component: Register },
     { path: "/forgotpass", component: Forgotpass },
-    // { path: "/passreset", component: Passreset },
+    { path: "/passreset", component: Passreset },
+    { path: "/personal", component: Personal },
+    { path: "/editprofile", component: Editprofile },
   ],
 });
 
