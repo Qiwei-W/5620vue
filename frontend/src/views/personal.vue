@@ -78,29 +78,6 @@ export default Vue.extend({
   data() {
     return {
       data: [],
-      // data: [
-      //   {
-      //     id: 1,
-      //     price: "2000",
-      //     title: "Piano class",
-      //     diff: "easy",
-      //     url: require("../assets/java.jpg"),
-      //   },
-      //   {
-      //     id: 2,
-      //     price: "300",
-      //     title: "Quantum Mechanics",
-      //     diff: "hard",
-      //     url: require("../assets/java.jpg"),
-      //   },
-      //   {
-      //     id: 3,
-      //     price: "140",
-      //     title: "Full Stack Java Develeopment wdnmdnmdnmd",
-      //     diff: "midium",
-      //     url: require("../assets/java.jpg"),
-      //   },
-      // ],
       email: "keSmi@gmail.com",
       avatarurl: "",
       name: "",
@@ -130,7 +107,6 @@ export default Vue.extend({
             this.name = this.personaldata.name;
             localStorage.setItem("username", this.name);
             this.data = this.personaldata.courses;
-            console.log("个人", this.personaldata);
           } else {
             this.$message.error("Course detail loading failed.");
           }

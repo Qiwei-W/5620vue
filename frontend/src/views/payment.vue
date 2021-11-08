@@ -97,7 +97,6 @@ export default Vue.extend({
       this.id = this.coursedata.id;
       this.price = this.$route.query.price || this.coursedata.price;
       this.name = this.$route.query.coursename || this.coursedata.name;
-      console.log("cnm", this.id);
     },
     showModal() {
       this.visible = true;
@@ -114,7 +113,7 @@ export default Vue.extend({
         .then((response) => {
           this.loading = false;
           if (response.data.success === true) {
-            this.$router.push("/payment");
+            this.$message.success("payment successed");
           } else {
             this.$message.error("Course detail loading failed.");
           }

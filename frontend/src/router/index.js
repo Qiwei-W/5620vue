@@ -11,6 +11,7 @@ import CourseDetail from "../views/course-detail.vue";
 import WatchVideo from "../views/watch-video.vue";
 import Question from "../views/question.vue";
 import Payment from "../views/payment.vue";
+import Suggest from "../views/suggestclass.vue";
 Vue.use(VueRouter);
 const router = new VueRouter({
   mode: "history",
@@ -27,9 +28,9 @@ const router = new VueRouter({
     { path: "/class", component: Class },
     { path: "/course-detail", name: "course", component: CourseDetail },
     { path: "/watch-video", component: WatchVideo },
-
     { path: "/question", component: Question },
     { path: "/payment", component: Payment },
+    { path: "/suggestclass", component: Suggest },
   ],
 });
 

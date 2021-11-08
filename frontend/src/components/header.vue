@@ -5,12 +5,12 @@
     /></router-link>
     <router-link to="/class"
       ><a-button type="link" ghost class="classbut classbut1"
-        >All Class</a-button
+        >All Course</a-button
       ></router-link
     >
-    <router-link to="/class"
+    <router-link to="/suggestclass"
       ><a-button type="link" ghost class="classbut classbut2"
-        >Suggest Class</a-button
+        >Suggest Course</a-button
       ></router-link
     >
     <a-input-search autosize class="inputsearch" @search="onSearch" />
