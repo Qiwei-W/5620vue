@@ -1,16 +1,6 @@
 <template>
   <div class="coursecard">
-    <!-- <router-link :to="{name:"course", params:{id:id}}> -->
-    <a-card
-      hoverable
-      :key="id"
-      @click="
-        $router.push({
-          name: 'course',
-          query: { id: id },
-        })
-      "
-    >
+    <a-card hoverable :key="id" @click="pushid">
       <img style="height: 160px" slot="cover" :src="url" />
       <a-card-meta :title="title">
         <template slot="description">
@@ -44,6 +34,7 @@ export default Vue.extend({
   },
   methods: {
     pushid() {
+      localStorage.setItem("cid", this.id);
       this.$router.push({
         path: "/course-detail",
         query: {

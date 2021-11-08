@@ -75,9 +75,9 @@ export default Vue.extend({
       this.name = value;
       this.init();
     },
-    init() {
+    async init() {
       this.loading = true;
-      axios
+      await axios
         .post("http://localhost:9998/elec5620/main/list", {
           categories: this.categories,
           level: this.level,
@@ -85,9 +85,11 @@ export default Vue.extend({
           name: this.name,
           offset: 0,
         })
+
         .then((response) => {
-          this.alldata = response.data.data;
           this.loading = false;
+          this.alldata = response.data.data;
+
           if (response.data.success !== true) {
             this.$message.error("Homepage loading failed");
           } else {

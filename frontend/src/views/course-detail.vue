@@ -36,6 +36,7 @@
           >Trial Course</a-button
         >
         <a-button
+          @click="buycourse"
           style="
             background: rgba(62, 166, 199, 0.6);
             left: 650px;
@@ -96,7 +97,6 @@
 <script>
 import Vue from "vue";
 import Header from "../components/header.vue";
-
 import moment from "moment";
 import axios from "axios";
 
@@ -124,124 +124,20 @@ export default Vue.extend({
       diff: "",
       updatetime: "",
       ratings: "",
-      // data: [
-      //   {
-      //     id: 1,
-      //     price: 2000,
-      //     title: "Piano class",
-      //     diff: "easy",
-      //     url: require("../assets/java.jpg"),
-      //   },
-      //   {
-      //     id: 2,
-      //     price: 300,
-      //     title: "Quantum Mechanics",
-      //     diff: "hard",
-      //     url: require("../assets/java.jpg"),
-      //   },
-      //   {
-      //     id: 3,
-      //     price: 140,
-      //     title: "Full Stack Java Develeopment wdnmdnmdnmd",
-      //     diff: "midium",
-      //     url: require("../assets/java.jpg"),
-      //   },
-      // ],
-      // results: [
-      //   {
-      //     title: "Introduction and prospects of java",
-      //     free: 1,
-      //   },
-      //   {
-      //     title: "Features and versions of java",
-      //     free: 0,
-      //   },
-      //   {
-      //     title: "The first java program",
-      //     free: 1,
-      //   },
-      //   {
-      //     title: "JDK installation and demonstration",
-      //     free: 0,
-      //   },
-      //   {
-      //     title: "What is a variable",
-      //     free: 1,
-      //   },
-      // ],
       chapterData: [],
       commentdata: [],
-      // commentdata: [
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(1, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(2, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(1, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(2, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(1, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(2, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(1, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(2, "days"),
-      //   },
-      // ],
       moment,
+      cid: 0,
+      uid: 0,
     };
   },
+
   created() {
-    this.id = this.$route.query.id;
+    this.getparams();
+    this.uid = parseInt(localStorage.getItem("uid"));
+    this.cid = parseInt(localStorage.getItem("cid"));
+    this.id = this.cid;
+    console.log("uid", this.uid);
   },
   mounted() {
     this.detail();
@@ -249,6 +145,9 @@ export default Vue.extend({
   },
 
   methods: {
+    getparams() {
+      this.id = this.$route.query.cid;
+    },
     detail() {
       axios({
         method: "get",
@@ -265,19 +164,18 @@ export default Vue.extend({
             this.desc = this.coursedata.desc;
             this.score = parseInt(this.coursedata.score);
             this.ratings = parseInt(this.coursedata.ratings);
-            this.$router.push({
-              path: "/course-detail",
-              query: {
-                data: this.data,
-              },
-            });
+            // this.$router.push({
+            //   path: "/course-detail",
+            //   query: {
+            //     data: this.data,
+            //   },
+            // });
           } else {
             this.$message.error("Course detail loading failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
     getChapter() {
@@ -290,7 +188,6 @@ export default Vue.extend({
           this.loading = false;
           if (response.data.success === true) {
             this.chapterData = response.data.data;
-            // console.log("章节", this.chapterData);
           } else {
             this.$message.error("Course detail loading failed.");
           }
@@ -324,10 +221,20 @@ export default Vue.extend({
       this.$router.push({
         path: "/watch-video",
         query: {
-          cid: item.cid,
+          cid: this.cid,
           id: item.id,
           url: item.url,
           name: item.name,
+          coursename: this.classname,
+          price: this.price,
+        },
+      });
+    },
+    buycourse() {
+      this.$router.push({
+        path: "/payment",
+        query: {
+          coursedata: this.coursedata,
         },
       });
     },

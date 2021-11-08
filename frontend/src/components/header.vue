@@ -13,13 +13,8 @@
         >Suggest Class</a-button
       ></router-link
     >
-    <a-input-search size="default" class="inputsearch" @search="onSearch" />
-    <img
-      v-if="personal === true"
-      class="shopping"
-      src="../assets/shopping-cart.png"
-      alt=""
-    />
+    <a-input-search autosize class="inputsearch" @search="onSearch" />
+
     <router-link to="/personal">
       <a-avatar class="avatar" :src="avatar"
     /></router-link>
@@ -79,16 +74,18 @@ export default Vue.extend({
   }
   .ant-input {
     background: transparent;
-    border: none;
+
+    border: 0px solid rgba(116, 191, 215, 0.6);
   }
   .inputsearch {
     margin-left: 40px;
     position: absolute;
+    height: 36px;
     width: 300px;
-    font-size: 25px;
+    font-size: 20px;
     background-color: rgba(116, 191, 215, 0.6);
     right: 20%;
-    top: 12px;
+    top: 14px;
   }
   .avatar {
     position: absolute;

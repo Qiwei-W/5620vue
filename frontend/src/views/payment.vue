@@ -5,10 +5,10 @@
     <h1 class="orderfont">Order Payment</h1>
     <div class="divider"></div>
     <a-card title="Order information" class="paycard">
-      <p class="payfont">Course Title: {{ title }}</p>
+      <p class="payfont">Course Title: {{ name }}</p>
       <p class="payfont">Order Number: 0000001</p>
       <p class="payfont">Payment Amount: ${{ price }}</p>
-      <p class="payfont">Payer: {{ name }}</p>
+      <p class="payfont">Payer: {{ username }}</p>
       <a-divider></a-divider>
 
       <a-button @click="showModal" class="paybut">Payment Completed</a-button>
@@ -39,8 +39,9 @@
         >
           Payment Successed
         </h3>
-        <router-link to="/watch-video"
+        <router-link to="/personal"
           ><a-button
+            @click="buy"
             style="
               display: inline-block;
               height: 40px;
@@ -67,6 +68,8 @@
 <script>
 import Vue from "vue";
 import Header from "../components/header.vue";
+import axios from "axios";
+
 // import Card from "../components/course-card.vue";
 export default Vue.extend({
   components: {
@@ -75,15 +78,51 @@ export default Vue.extend({
   },
   data() {
     return {
-      title: "Piano beginner",
-      price: 280,
-      name: "Lily Cyrus",
       visible: false,
+      coursedata: [],
+      price: 0,
+      name: "",
+      username: "",
+      id: 0,
+      uid: 2,
     };
   },
+  created() {
+    this.getParams();
+    this.username = localStorage.getItem("username");
+  },
   methods: {
+    getParams() {
+      this.coursedata = this.$route.query.coursedata;
+      this.id = this.coursedata.id;
+      this.price = this.$route.query.price || this.coursedata.price;
+      this.name = this.$route.query.coursename || this.coursedata.name;
+      console.log("cnm", this.id);
+    },
     showModal() {
       this.visible = true;
+    },
+    buy() {
+      axios({
+        method: "post",
+        url: "http://localhost:9998/elec5620/main/buy",
+        data: {
+          cid: this.id,
+          uid: this.uid,
+        },
+      })
+        .then((response) => {
+          this.loading = false;
+          if (response.data.success === true) {
+            this.$router.push("/payment");
+          } else {
+            this.$message.error("Course detail loading failed.");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message.error("Course detail loading failed.");
+        });
     },
   },
 });

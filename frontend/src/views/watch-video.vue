@@ -1,9 +1,26 @@
 <template>
   <div class="watchvideo">
-    <Header :personal="true"></Header>
+    <Header></Header>
     <div class="videocontainer">
+      <a-empty
+        class="empty"
+        v-if="free === 1"
+        image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+        :image-style="{
+          height: '260px',
+        }"
+      >
+        <span slot="description"> The trial is over, please pay first </span>
+        <a-button
+          type="primary"
+          style="font-size: 18px; font-weight: bold"
+          @click="gobuy"
+          >>Purchase Course</a-button
+        >
+      </a-empty>
       <video-player
-        v-if="update"
+        :key="id"
+        v-if="free === 0 || free === 2"
         class="video-player vjs-custom-skin"
         ref="videoPlayer"
         :playsinline="true"
@@ -31,25 +48,25 @@
             </a-list>
           </div>
         </a-tab-pane>
-        <!-- <a-tab-pane key="2" tab="Recommend">
+        <a-tab-pane key="2" tab="Recommend">
           <h3 class="recommendtitle">Related Courses Recommendation</h3>
           <a-row :gutter="16">
             <a-col
               :span="8"
               style="margin-top: 30px"
-              v-for="item in coursedata"
+              v-for="item in recommenddata"
               :key="item.id"
             >
               <Card
                 :id="item.id"
-                :title="item.title"
-                :diff="item.diff"
+                :title="item.name"
+                :diff="item.level"
                 :price="item.price"
-                :url="item.url"
+                :url="item.posturl"
               ></Card>
             </a-col>
           </a-row>
-        </a-tab-pane> -->
+        </a-tab-pane>
         <a-tab-pane key="3" tab="Comment" force-render>
           <div class="demo-infinite-container2">
             <a-empty
@@ -111,15 +128,14 @@
 import Vue from "vue";
 import Header from "../components/header.vue";
 import moment from "moment";
-
-// import Card from "../components/course-card.vue";
+import Card from "../components/course-card.vue";
 import axios from "axios";
 export default Vue.extend({
   inject: ["reload"],
   name: "watch-video",
   components: {
     Header,
-    // Card,
+    Card,
   },
   data() {
     return {
@@ -143,7 +159,7 @@ export default Vue.extend({
           },
         ],
         // poster:
-        // "https://p1.music.126.net/5zs7IvmLv7KahY3BFzUmrg==/109951163635241613.jpg?param=600y500", // 你的封面地址
+        //   "https://p1.music.126.net/5zs7IvmLv7KahY3BFzUmrg==/109951163635241613.jpg?param=600y500", // 你的封面地址
         notSupportedMessage:
           "This video is temporarily unavailable, please try again later", // 允许覆盖Video.js无法播放媒体源时显示的默认信息。
         controlBar: {
@@ -158,28 +174,14 @@ export default Vue.extend({
       busy: false,
       commentdata: [],
       update: true,
-      // commentdata: [
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure)",
-      //     datetime: moment().subtract(2, "days"),
-      //   },
-      //   {
-      //     author: "Han Solo",
-      //     avatar:
-      //       "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      //     content:
-      //       "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-      //     datetime: moment().subtract(1, "days"),
-      //   },
-      // ],
+      recommenddata: [],
       submitting: false,
       value: "",
       moment,
       coursedata: [],
+      isfree: 2,
+      free: 0,
+      id: 0,
     };
   },
 
@@ -190,21 +192,33 @@ export default Vue.extend({
     this.getParams();
     this.getChapter();
     this.getComment();
+    this.getRecommend();
   },
   methods: {
+    gobuy() {
+      this.$router.push({
+        path: "/course-detail",
+        query: {
+          cid: this.cid,
+          name: this.coursename,
+          price: this.price,
+        },
+      });
+    },
     geturl() {
       this.playerOptions["sources"][0]["src"] = this.$route.query.url;
     },
     loadvideo(item) {
       this.url = item.url;
       this.playerOptions["sources"][0]["src"] = this.url;
+      this.free = item.isfree;
       // console.log(this.videourl, item.url);
     },
     getParams() {
       this.cid = this.$route.query.cid;
-      this.name = this.$route.query.name;
+      this.coursename = this.$route.query.coursename;
+      this.price = this.$route.query.price;
     },
-
     getChapter() {
       this.loading = true;
       axios({
@@ -215,6 +229,9 @@ export default Vue.extend({
           this.loading = false;
           if (response.data.success === true) {
             this.chapterData = response.data.data;
+            for (let i in this.chapterData) {
+              this.id = this.chapterData[i].id;
+            }
             console.log("章节", this.chapterData);
           } else {
             this.$message.error("Course detail loading failed.");
@@ -236,6 +253,25 @@ export default Vue.extend({
           if (response.data.success === true) {
             this.commentdata = response.data.data;
             console.log("评论", this.commentdata);
+          } else {
+            this.$message.error("Course detail loading failed.");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message.error("Course detail loading failed.");
+        });
+    },
+    getRecommend() {
+      axios({
+        method: "get",
+        url: "http://localhost:9998/elec5620/main/recommend?id=" + this.cid,
+      })
+        .then((response) => {
+          this.loading = false;
+          if (response.data.success === true) {
+            this.recommenddata = response.data.data;
+            console.log("推荐", this.recommenddata);
           } else {
             this.$message.error("Course detail loading failed.");
           }
@@ -306,6 +342,12 @@ export default Vue.extend({
     width: 100%;
     max-height: 200px;
     background: rgba(143, 189, 203, 0.6);
+    .empty {
+      position: absolute;
+      top: 150px;
+      width: 100%;
+      height: 400px;
+    }
   }
   .videobot {
     margin: 0 auto;

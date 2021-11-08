@@ -13,7 +13,7 @@
         "
         :src="url"
       />
-      <a-upload
+      <!-- <a-upload
         name="avatar"
         list-type="picture-card"
         class="avatar-uploader"
@@ -27,10 +27,15 @@
           <a-icon :type="loading ? 'loading' : 'plus'" />
           <div class="ant-upload-text">Upload</div>
         </div>
-      </a-upload>
+      </a-upload> -->
 
       <p class="namep">Name:</p>
-      <a-input class="nameinput" placeholder="Edit your name"> </a-input>
+      <a-input
+        v-model="username"
+        class="nameinput"
+        placeholder="Edit your name"
+      >
+      </a-input>
       <p class="genderp">Gender:</p>
       <a-radio-group class="genderp" style="left: 360px" v-model="gender">
         <a-radio :value="1"> Male </a-radio>
@@ -38,6 +43,7 @@
       </a-radio-group>
     </div>
     <a-button
+      @click="update"
       type="primary"
       style="font-size: 20px; font-weight: bold; left: -100px; top: 450px"
       class="forgotbut"
@@ -47,11 +53,12 @@
   </div>
 </template>
 <script>
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
+// function getBase64(img, callback) {
+//   const reader = new FileReader();
+//   reader.addEventListener("load", () => callback(reader.result));
+//   reader.readAsDataURL(img);
+// }
+import axios from "axios";
 
 import Vue from "vue";
 import Header from "../components/header.vue";
@@ -66,6 +73,8 @@ export default Vue.extend({
       imageUrl: "",
       avtUrl: "touxiang.png",
       gender: "",
+      username: "",
+      uid: 0,
     };
   },
   computed: {
@@ -73,32 +82,61 @@ export default Vue.extend({
       return `${require("../assets/" + this.avtUrl)}`;
     },
   },
+  created() {
+    this.uid = localStorage.getItem("uid");
+    this.username = localStorage.getItem("username");
+  },
   methods: {
-    handleChange(info) {
-      if (info.file.status === "uploading") {
-        this.loading = true;
-        return;
-      }
-      if (info.file.status === "done") {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, (imageUrl) => {
-          this.imageUrl = imageUrl;
+    update() {
+      this.loading = true;
+      axios({
+        method: "post",
+        url: "http://localhost:9998/elec5620/main/update",
+        data: {
+          avataurl: "",
+          uid: this.uid,
+          userName: this.username,
+        },
+      })
+        .then((response) => {
           this.loading = false;
+          if (response.data.success === true) {
+            this.$message.success("Edit successed");
+            this.$router.push("/personal");
+          } else {
+            this.$message.error("Course detail loading failed.");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message.error("Course detail loading failed.");
         });
-      }
     },
-    beforeUpload(file) {
-      const isJpgOrPng =
-        file.type === "image/jpeg" || file.type === "image/png";
-      if (!isJpgOrPng) {
-        this.$message.error("You can only upload JPG file!");
-      }
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error("Image must smaller than 2MB!");
-      }
-      return isJpgOrPng && isLt2M;
-    },
+    // handleChange(info) {
+    //   if (info.file.status === "uploading") {
+    //     this.loading = true;
+    //     return;
+    //   }
+    //   if (info.file.status === "done") {
+    //     // Get this url from response in real world.
+    //     getBase64(info.file.originFileObj, (imageUrl) => {
+    //       this.imageUrl = imageUrl;
+    //       this.loading = false;
+    //     });
+    //   }
+    // },
+    //   beforeUpload(file) {
+    //     const isJpgOrPng =
+    //       file.type === "image/jpeg" || file.type === "image/png";
+    //     if (!isJpgOrPng) {
+    //       this.$message.error("You can only upload JPG file!");
+    //     }
+    //     const isLt2M = file.size / 1024 / 1024 < 2;
+    //     if (!isLt2M) {
+    //       this.$message.error("Image must smaller than 2MB!");
+    //     }
+    //     return isJpgOrPng && isLt2M;
+    //   },
   },
 });
 </script>
