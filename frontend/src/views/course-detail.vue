@@ -189,12 +189,11 @@ export default Vue.extend({
           if (response.data.success === true) {
             this.chapterData = response.data.data;
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error("Chapter loading failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
     getComment() {
@@ -209,12 +208,11 @@ export default Vue.extend({
             this.commentdata = response.data.data;
             console.log("评论", this.commentdata);
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error("Comment loading failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
     trailCourse(item) {

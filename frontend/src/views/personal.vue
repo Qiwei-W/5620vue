@@ -108,12 +108,11 @@ export default Vue.extend({
             localStorage.setItem("username", this.name);
             this.data = this.personaldata.courses;
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error("Personal information loading failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
   },

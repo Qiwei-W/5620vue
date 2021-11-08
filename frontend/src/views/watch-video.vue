@@ -232,12 +232,11 @@ export default Vue.extend({
             }
             console.log("章节", this.chapterData);
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error("Chpaters loading failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
     getComment() {
@@ -252,12 +251,11 @@ export default Vue.extend({
             this.commentdata = response.data.data;
             console.log("评论", this.commentdata);
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error("Comment loading failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
     getRecommend() {
@@ -271,12 +269,11 @@ export default Vue.extend({
             this.recommenddata = response.data.data;
             console.log("推荐", this.recommenddata);
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error("Recommend Courses loading failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
     handleSubmit() {
@@ -301,7 +298,6 @@ export default Vue.extend({
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Comment failed.");
         });
       axios({
         method: "post",
@@ -318,7 +314,6 @@ export default Vue.extend({
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Score added failed.");
         });
       setTimeout(() => {
         this.submitting = false;

@@ -91,15 +91,13 @@ export default Vue.extend({
           this.alldata = response.data.data;
 
           if (response.data.success !== true) {
-            this.$message.error("Homepage loading failed");
+            this.$message.error("Courses loading failed");
           } else {
             console.log(response.data);
           }
         })
         .catch((error) => {
-          console.log("Email checking failed.");
           console.log(error);
-          this.$message.error("Email checking failed.");
         });
     },
   },

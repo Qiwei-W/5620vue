@@ -78,10 +78,8 @@ export default Vue.extend({
             console.log(response.data);
           }
         })
-        .catch((error) => {
-          console.log("Email checking failed.");
+        .catch(() => {
           console.log(error);
-          this.$message.error("Email checking failed.");
         });
     },
   },

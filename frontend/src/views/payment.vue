@@ -115,12 +115,11 @@ export default Vue.extend({
           if (response.data.success === true) {
             this.$message.success("payment successed");
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error("Payment failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
   },

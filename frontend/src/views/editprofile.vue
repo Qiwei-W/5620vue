@@ -104,12 +104,11 @@ export default Vue.extend({
             this.$message.success("Edit successed");
             this.$router.push("/personal");
           } else {
-            this.$message.error("Course detail loading failed.");
+            this.$message.error(" Edit failed.");
           }
         })
         .catch((error) => {
           console.log(error);
-          this.$message.error("Course detail loading failed.");
         });
     },
     // handleChange(info) {
