@@ -78,7 +78,7 @@ export default Vue.extend({
             console.log(response.data);
           }
         })
-        .catch(() => {
+        .catch((error) => {
           console.log(error);
         });
     },
