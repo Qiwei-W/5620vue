@@ -186,6 +186,7 @@ export default Vue.extend({
   },
 
   created() {
+    this.uid = localStorage.getItem("uid");
     this.geturl();
   },
   mounted() {
@@ -292,7 +293,8 @@ export default Vue.extend({
         data: {
           cid: this.cid,
           comment: this.value,
-          uid: 1,
+          //改uid
+          uid: this.uid,
         },
       })
         .then((response) => {
