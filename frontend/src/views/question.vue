@@ -96,9 +96,16 @@ export default Vue.extend({
             this.questionid = ele.qid;
             this.flag = this.data[0].flag;
             if (this.flag === 3) {
+              this.$message.success(
+                " Your exclusive recommended course has been generated, please check in Suggest Course "
+              );
+
               this.$router.push("/homepage");
             }
             if (this.flag === 2) {
+              this.$message.success(
+                " Your exclusive recommended course has been generated, please check in Suggest Course "
+              );
               this.$router.push("/homepage");
             }
             this.pid = this.data[0].pid;
