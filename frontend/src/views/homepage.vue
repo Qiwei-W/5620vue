@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <Header></Header>
+    <Header :personal="false"></Header>
     <div class="lunbo">
       <a-carousel autoplay>
         <div>
@@ -35,10 +35,14 @@
         </h2>
       </a-row>
       <a-row :gutter="16">
-        <a-col :span="8">
-          <a-card hoverable>
-            <img class="cardimg" slot="cover" src="../assets/java.jpg" />
-          </a-card>
+        <a-col :span="8" v-for="item in data" :key="item.id">
+          <Card
+            :id="item.id"
+            :title="item.name"
+            :diff="item.level"
+            :price="item.price"
+            :url="item.posturl"
+          ></Card>
         </a-col>
       </a-row>
     </div>
@@ -47,18 +51,40 @@
 <script>
 import Vue from "vue";
 import Header from "../components/header.vue";
+import axios from "axios";
+import Card from "../components/course-card.vue";
 export default Vue.extend({
   components: {
     Header,
+    Card,
   },
   data() {
-    return {};
+    return {
+      data: [],
+    };
   },
-  //   methods: {
-  //     onSearch(value) {
-  //       console.log(value);
-  //     },
-  //   },
+  created() {
+    this.init();
+  },
+  methods: {
+    init() {
+      axios
+        .get("http://localhost:9998/elec5620/main/mostviewed")
+        .then((response) => {
+          this.data = response.data.data;
+          if (response.data.success !== true) {
+            this.$message.error("Homepage loading failed");
+          } else {
+            console.log(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log("Email checking failed.");
+          console.log(error);
+          this.$message.error("Email checking failed.");
+        });
+    },
+  },
 });
 </script>
 <style>
@@ -84,18 +110,36 @@ export default Vue.extend({
   height: 380px;
   width: 100%;
 }
+
 .ant-card {
   margin: 20px 10px 10px 40px;
   background: transparent;
-  width: 300px;
-  border: none;
-  height: 140px;
+  width: 364px;
+  border-radius: 50px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+  height: 299px;
+}
+.ant-card-meta-title {
+  float: left;
+  font-size: 28px;
+}
+.ant-card-meta-description {
+  font-size: 18px;
+  font-weight: bold;
 }
 .ant-card-cover {
   background: transparent;
 }
 .ant-card-cover img {
   background: transparent;
-  border-radius: 50px;
+  border-radius: 50px 50px 0 0;
+}
+.diff {
+  float: right;
+  font-size: 16px;
+  color: green;
+}
+.price {
+  font-weight: bolder;
 }
 </style>

@@ -1,11 +1,25 @@
 <template>
   <div class="homeheader">
-    <img class="logo" :src="logo" alt="" />
-    <a-button type="link" ghost class="classbut classbut1">Free Class</a-button>
-    <a-button type="link" ghost class="classbut classbut2"
-      >Suggest Class</a-button
+    <router-link to="/homepage"
+      ><img class="logo" :src="logo" alt=""
+    /></router-link>
+    <router-link to="/class"
+      ><a-button type="link" ghost class="classbut classbut1"
+        >All Class</a-button
+      ></router-link
+    >
+    <router-link to="/class"
+      ><a-button type="link" ghost class="classbut classbut2"
+        >Suggest Class</a-button
+      ></router-link
     >
     <a-input-search size="default" class="inputsearch" @search="onSearch" />
+    <img
+      v-if="personal === true"
+      class="shopping"
+      src="../assets/shopping-cart.png"
+      alt=""
+    />
     <router-link to="/personal">
       <a-avatar class="avatar" :src="avatar"
     /></router-link>
@@ -13,9 +27,14 @@
 </template>
 <script>
 /*eslint-disable*/
+import Vue from "vue";
 // import Layout from "../components/computer-layout.vue";
-export default {
-  components: {},
+export default Vue.extend({
+  name: "homeheader",
+  props: {
+    personal: Boolean,
+  },
+
   data() {
     return {
       avatar: require("../assets/个人中心.png"),
@@ -24,10 +43,11 @@ export default {
   },
   methods: {
     onSearch(value) {
-      console.log(value);
+      this.$emit("search", value);
+      // console.log(value);
     },
   },
-};
+});
 </script>
 <style lang="less">
 .homeheader {
@@ -75,6 +95,13 @@ export default {
     width: 35px;
     height: 35px;
     right: 5%;
+    top: 13px;
+  }
+  .shopping {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    right: 13%;
     top: 13px;
   }
 }

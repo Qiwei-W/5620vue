@@ -6,17 +6,14 @@
           <a-input
             style="width: 450px"
             class="forgotinput"
+            v-model="email"
             v-decorator="[
-              'password',
+              'email',
               {
-                rules: [
+                rule: [
                   {
                     type: 'email',
                     message: 'The input is not valid E-mail!',
-                  },
-                  {
-                    required: true,
-                    message: 'Please input your E-mail!',
                   },
                 ],
               },
@@ -25,6 +22,7 @@
           >
           </a-input>
           <a-button
+            @click="sendcode"
             type="primary"
             style="font-size: 16px; font-weight: bold"
             class="forgotbut"
@@ -49,6 +47,7 @@
           >
           </a-input>
           <a-button
+            @click="verify"
             type="primary"
             style="font-size: 24px; font-weight: bold"
             class="forgotbut"
@@ -64,11 +63,63 @@
 <script>
 import Vue from "vue";
 import Layout from "../components/computer-layout.vue";
-// import axios from "axios";
+import axios from "axios";
 export default Vue.extend({
   name: "forgotpassword",
   components: {
     Layout,
+  },
+  data() {
+    return {
+      email: "",
+      code: "",
+    };
+  },
+  methods: {
+    sendcode(e) {
+      e.preventDefault();
+
+      axios({
+        method: "post",
+        url: "http://localhost:9998/elec5620/sys/sendEmailRequest",
+        data: {
+          email: this.email,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success === true) {
+            this.$message.success("Email has been sent to you");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    verify(e) {
+      e.preventDefault();
+
+      axios({
+        method: "get",
+        url: "http://localhost:9998/elec5620/sys/codeVerify",
+        params: { code: this.code },
+      })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success === true) {
+            this.$message.success("Code Verification Successed");
+            this.$router.push({
+              path: "/passreset",
+              query: {
+                email: this.email,
+              },
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 });
 </script>

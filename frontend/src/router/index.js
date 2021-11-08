@@ -6,6 +6,11 @@ import Forgotpass from "../views/forgotpassword.vue";
 import Passreset from "../views/passreset.vue";
 import Personal from "../views/personal.vue";
 import Editprofile from "../views/editprofile.vue";
+import Class from "../views/class.vue";
+import CourseDetail from "../views/course-detail.vue";
+import WatchVideo from "../views/watch-video.vue";
+import Question from "../views/question.vue";
+import Payment from "../views/payment.vue";
 Vue.use(VueRouter);
 const router = new VueRouter({
   mode: "history",
@@ -19,6 +24,12 @@ const router = new VueRouter({
     { path: "/passreset", component: Passreset },
     { path: "/personal", component: Personal },
     { path: "/editprofile", component: Editprofile },
+    { path: "/class", component: Class },
+    { path: "/course-detail", name: "course", component: CourseDetail },
+    { path: "/watch-video", component: WatchVideo },
+
+    { path: "/question", component: Question },
+    { path: "/payment", component: Payment },
   ],
 });
 

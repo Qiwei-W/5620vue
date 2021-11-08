@@ -1,6 +1,6 @@
 <template>
   <div class="edit">
-    <Header></Header>
+    <Header :personal="true"></Header>
     <div class="editinfo">
       <img
         style="

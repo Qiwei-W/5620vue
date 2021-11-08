@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="left">
-      <a-tabs defaultActiveKey="1" :tabBarGutter="0">
+      <a-tabs :defaultActiveKey="key" :tabBarGutter="0">
         <a-tab-pane key="1" tab="Log in">
-          <a-form :form="form" @submit="handleSubmit">
+          <a-form :form="form1" @submit="loginSubmit">
             <a-form-item>
               <a-input
                 v-decorator="[
@@ -73,7 +73,7 @@
           >
         </a-tab-pane>
         <a-tab-pane key="2" tab="Register">
-          <a-form :form="form" @submit="handleSubmit">
+          <a-form :form="form2" @submit="registerSubmit">
             <a-form-item>
               <a-input
                 v-decorator="[
@@ -148,6 +148,19 @@
               />
             </a-form-item>
             <a-form-item>
+              <a-input
+                v-decorator="[
+                  'name',
+                  {
+                    rules: [
+                      { required: true, message: 'Please input your name!' },
+                    ],
+                  },
+                ]"
+                placeholder="Name "
+              ></a-input>
+            </a-form-item>
+            <a-form-item>
               <a-checkbox
                 style="font-size: 18px"
                 v-decorator="[
@@ -190,7 +203,8 @@
 <script>
 import Layout from "../components/computer-layout.vue";
 import Vue from "vue";
-// import axios from "axios";
+import axios from "axios";
+
 export default Vue.extend({
   name: "forgotpassword",
 
@@ -199,46 +213,75 @@ export default Vue.extend({
   },
   data() {
     return {
+      key: "2",
       // email: "",
       // name: "",
       // password: "",
     };
   },
   beforeCreate() {
-    this.form = this.$form.createForm(this, { name: "userRegister" });
+    this.form1 = this.$form.createForm(this, { name: "Register" });
+    this.form2 = this.$form.createForm(this, { name: "Login" });
   },
   methods: {
-    handleSubmit(e) {
+    registerSubmit(e) {
       e.preventDefault();
-      this.form.validateFields((err, values) => {
+      this.form2.validateFields((err, values) => {
         if (!err) {
           console.log("Received values of form: ", values);
         }
       });
-      //   axios
-      //     .post(
-      //       "http://localhost:9999/elec5619/sys/register",
+      axios
+        .post("http://localhost:9998/elec5620/sys/register", {
+          email: this.form2.getFieldValue("email"),
+          password: this.form2.getFieldValue("password"),
+          name: this.form2.getFieldValue("name"),
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.data.success === true) {
+            this.$message.success("Sign up Successed");
+            this.key = "1";
+          } else {
+            console.log(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log("Email checking failed.");
+          console.log(error);
+          this.$message.error("Email checking failed.");
+        });
+    },
+    loginSubmit(e) {
+      e.preventDefault();
+      this.form1.validateFields((err, values) => {
+        if (!err) {
+          console.log("Received values of form: ", values);
+        }
+      });
+      axios
+        .post("http://localhost:9998/elec5620/sys/login", {
+          mail: this.form1.getFieldValue("email"),
+          password: this.form1.getFieldValue("password"),
+        })
+        .then((response) => {
+          const token = response.data.data.Authorization;
+          localStorage.setItem("token", token);
+          localStorage.setItem("email", this.mail);
 
-      //       {
-      //         email: this.form.getFieldValue("email"),
-      //         password: this.form.getFieldValue("password"),
-      //         name: this.form.getFieldValue("name"),
-      //       }
-      //     )
-      //     .then((response) => {
-      //       console.log(response);
-      //       if (response.data.success === true) {
-      //         this.$router.push("/login");
-      //         this.$message.success("Sign up Successed");
-      //       } else {
-      //         console.log(response.data);
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log("Email checking failed.");
-      //       console.log(error);
-      //       this.$message.error("Email checking failed.");
-      //     });
+          axios.defaults.headers.common["Authorization"] = token;
+          if (response.data.success === true) {
+            this.$message.success("Login Successed");
+            this.$router.push("/homepage");
+          } else {
+            console.log(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log("Email checking failed.");
+          console.log(error);
+          this.$message.error("Email checking failed.");
+        });
     },
 
     handleConfirmBlur(e) {

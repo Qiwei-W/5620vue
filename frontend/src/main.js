@@ -5,7 +5,10 @@ import Antd from "ant-design-vue";
 import Form from "ant-design-vue";
 import axios from "axios";
 import Axios from "axios";
-
+import VueVideoPlayer from "vue-video-player";
+import "video.js/dist/video-js.css";
+import "vue-video-player/src/custom-theme.css";
+Vue.use(VueVideoPlayer);
 import "ant-design-vue/dist/antd.css";
 import router from "./router";
 // import "es6-promise/auto";
@@ -59,7 +62,7 @@ axios.interceptors.response.use(
       alert("session expired.");
       localStorage.removeItem("token");
       router.replace({
-        path: "/login",
+        path: "/register",
       });
     } else {
       return Promise.reject(response);
