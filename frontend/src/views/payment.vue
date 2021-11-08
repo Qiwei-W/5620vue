@@ -84,12 +84,13 @@ export default Vue.extend({
       name: "",
       username: "",
       id: 0,
-      uid: 2,
+      uid: 0,
     };
   },
   created() {
     this.getParams();
     this.username = localStorage.getItem("username");
+    this.uid = localStorage.getItem("uid");
   },
   methods: {
     getParams() {
