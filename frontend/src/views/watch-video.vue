@@ -93,11 +93,7 @@
             </a-list>
           </div>
           <a-comment>
-            <a-avatar
-              slot="avatar"
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-              alt="Han Solo"
-            />
+            <a-avatar slot="avatar" :src="posturl" />
             <div slot="content">
               <a-form-item>
                 <a-textarea :rows="4" :value="value" @change="handleChange" />
@@ -187,6 +183,7 @@ export default Vue.extend({
 
   created() {
     this.uid = localStorage.getItem("uid");
+    this.postrul = localStorage.getItem("posturl");
     this.geturl();
   },
   mounted() {

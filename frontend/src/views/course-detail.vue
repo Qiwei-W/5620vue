@@ -29,17 +29,17 @@
           &nbsp;)</span
         >
         <h3 class="detdesc">{{ desc }}</h3>
-        <a-button
+        <!-- <a-button
           @click="trailCourse"
           style="background: rgba(62, 166, 199, 0.6); left: 460px"
           class="detbut"
           >Trial Course</a-button
-        >
+        > -->
         <a-button
           @click="buycourse"
           style="
             background: rgba(62, 166, 199, 0.6);
-            left: 650px;
+            left: 450px;
             background: rgba(255, 169, 40, 0.77);
             border: 4px solid rgba(251, 153, 104, 0.7);
           "

@@ -270,6 +270,7 @@ export default Vue.extend({
           localStorage.setItem("email", this.form1.getFieldValue("email"));
           localStorage.setItem("uid", response.data.data.uid);
           localStorage.setItem("username", response.data.data.userName);
+          localStorage.setItem("posturl", response.data.data.avatarurl);
           axios.defaults.headers.common["Authorization"] = token;
           if (response.data.success === true) {
             this.$message.success("Login Successed");
