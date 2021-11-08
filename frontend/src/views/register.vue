@@ -274,7 +274,7 @@ export default Vue.extend({
           axios.defaults.headers.common["Authorization"] = token;
           if (response.data.success === true) {
             this.$message.success("Login Successed");
-            this.$router.push("/homepage");
+            this.$router.push("/question");
           } else {
             console.log(response.data);
           }

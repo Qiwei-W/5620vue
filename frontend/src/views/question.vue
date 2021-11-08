@@ -96,14 +96,13 @@ export default Vue.extend({
             this.questionid = ele.qid;
             this.flag = this.data[0].flag;
             if (this.flag === 3) {
-              this.$router.push("/suggestclass");
+              this.$router.push("/homepage");
             }
             if (this.flag === 2) {
-              this.$router.push("/suggestclass");
+              this.$router.push("/homepage");
             }
             this.pid = this.data[0].pid;
             this.qid = this.data[0].qid;
-
             const arr = [];
             for (let i = 0; i < Object.keys(ele).length - 3; i++) {
               if (ele["answer" + i]) {
@@ -151,8 +150,8 @@ export default Vue.extend({
     .xss {
       max-width: 600px;
       min-width: 300px;
-      max-height: 100px;
-      min-height: 50px;
+      max-height: 200px;
+      min-height: 100px;
       width: 50vw;
       height: 90px;
       background: #f2f2f2;
