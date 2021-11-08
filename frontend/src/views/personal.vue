@@ -11,15 +11,17 @@
         style="
           position: absolute;
           left: 168px;
-          top: 267px;
+          top: 300px;
           background: white;
           border: 1px solid white;
           border-radius: 100px;
+          width: 150px;
+          height: 150px;
         "
-        src="../assets/touxiang.png"
+        :src="avatarurl"
       />
       <div class="personaltext">
-        <p class="name">Kevin Smith</p>
+        <p class="name">{{ name }}</p>
         <router-link to="/editprofile"
           ><img
             style="float: left; margin-left: 10px; width: 37px; height: 35px"
@@ -37,8 +39,8 @@
             style="
               display: inline-block;
               position: absolute;
-              top: 10px;
-              left: 50px;
+              top: -20px;
+              left: 0px;
               font-size: 18px;
               font-weight: bold;
             "
@@ -47,12 +49,15 @@
           </h2>
         </a-row>
         <a-row :gutter="16">
+          <a-empty description="No course yet" v-if="!data.length"></a-empty>
           <a-col :span="8" v-for="item in data" :key="item.id">
             <Card
-              :title="item.title"
-              :diff="item.diff"
+              v-if="data.length"
+              :id="item.id"
+              :title="item.name"
+              :diff="item.level"
               :price="item.price"
-              :url="item.url"
+              :url="item.posturl"
             ></Card>
           </a-col>
         </a-row>
@@ -62,6 +67,7 @@
 </template>
 <script>
 import Vue from "vue";
+import axios from "axios";
 import Header from "../components/header.vue";
 import Card from "../components/course-card.vue";
 export default Vue.extend({
@@ -71,42 +77,70 @@ export default Vue.extend({
   },
   data() {
     return {
-      data: [
-        {
-          id: 1,
-          price: 2000,
-          title: "Piano class",
-          diff: "easy",
-          url: require("../assets/java.jpg"),
-        },
-        {
-          id: 2,
-          price: 300,
-          title: "Quantum Mechanics",
-          diff: "hard",
-          url: require("../assets/java.jpg"),
-        },
-        {
-          id: 3,
-          price: 140,
-          title: "Full Stack Java Develeopment wdnmdnmdnmd",
-          diff: "midium",
-          url: require("../assets/java.jpg"),
-        },
-      ],
+      data: [],
+      // data: [
+      //   {
+      //     id: 1,
+      //     price: "2000",
+      //     title: "Piano class",
+      //     diff: "easy",
+      //     url: require("../assets/java.jpg"),
+      //   },
+      //   {
+      //     id: 2,
+      //     price: "300",
+      //     title: "Quantum Mechanics",
+      //     diff: "hard",
+      //     url: require("../assets/java.jpg"),
+      //   },
+      //   {
+      //     id: 3,
+      //     price: "140",
+      //     title: "Full Stack Java Develeopment wdnmdnmdnmd",
+      //     diff: "midium",
+      //     url: require("../assets/java.jpg"),
+      //   },
+      // ],
       email: "keSmi@gmail.com",
+      avatarurl: "",
+      name: "",
     };
   },
   created() {
-    (this.email = localStorage.getItem("email")), console.log(this.email);
-    this.my();
+    this.email = localStorage.getItem("email");
+    this.init();
   },
 
-  //   methods: {
-  //     onSearch(value) {
-  //       console.log(value);
-  //     },
-  //   },
+  methods: {
+    init() {
+      this.mail = this.email;
+      this.loading = true;
+      axios({
+        method: "post",
+        url: "http://localhost:9998/elec5620/main/personalCenter",
+        data: {
+          email: this.mail,
+        },
+      })
+        .then((response) => {
+          this.loading = false;
+          if (response.data.success === true) {
+            this.personaldata = response.data.data;
+            this.avatarurl = this.personaldata.avatarURL;
+            this.name = this.personaldata.name;
+            localStorage.setItem("username", this.name);
+            this.data = this.personaldata.courses;
+            console.log("个人", this.personaldata);
+          } else {
+            this.$message.error("Course detail loading failed.");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message.error("Course detail loading failed.");
+        });
+    },
+  },
 });
 </script>
 
